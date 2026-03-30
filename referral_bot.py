@@ -19,7 +19,7 @@ CHANNEL_ID = -1003579124716  # User's channel ID
 OWNER_ID = 7253742084
 CONTACT_USERNAME = "Honestbanda"
 
-# Button Labels (Exactly matching the user's screenshot)
+# Button Labels (Exactly matching the user's screenshot for the menu)
 BTN_START = "🚀 Start"
 BTN_REF_LINK = "🔗 My Referral Link"
 BTN_STATS = "📊 My Stats"
@@ -130,7 +130,7 @@ def main_menu_keyboard():
     keyboard.row(types.KeyboardButton(BTN_LEADERBOARD), types.KeyboardButton(BTN_GIVEAWAYS))
     # Row 4: Hall of Fame and Contact
     keyboard.row(types.KeyboardButton(BTN_HALL_OF_FAME), types.KeyboardButton(BTN_CONTACT))
-    # Row 5: Cash Agent (Requested)
+    # Row 5: Cash Agent (Forced)
     keyboard.row(types.KeyboardButton(BTN_CASH_AGENT))
     return keyboard
 
@@ -141,23 +141,25 @@ def command_start(message):
 @bot.message_handler(func=lambda message: True)
 def handle_all_messages(message):
     text = message.text
-    
-    # Unified handler for exact matching
-    if text == BTN_START:
+    if not text:
+        return
+
+    # FUZZY MATCHING SYSTEM: Looks for keywords to avoid emoji mismatch issues
+    if "Start" in text:
         handle_start(message)
-    elif text == BTN_REF_LINK:
+    elif "Referral Link" in text:
         handle_ref_link(message)
-    elif text == BTN_STATS:
+    elif "Stats" in text:
         handle_stats(message)
-    elif text == BTN_LEADERBOARD:
+    elif "Leaderboard" in text:
         handle_leaderboard(message)
-    elif text == BTN_GIVEAWAYS:
+    elif "Giveaways" in text:
         handle_giveaways(message)
-    elif text == BTN_HALL_OF_FAME:
+    elif "Hall of Fame" in text:
         handle_hall_of_fame(message)
-    elif text == BTN_CONTACT:
+    elif "Contact" in text or "Profit" in text:
         handle_contact(message)
-    elif text == BTN_CASH_AGENT:
+    elif "Cash Agent" in text or "Agent" in text:
         handle_cash_agent(message)
     else:
         # Default response for unknown text
@@ -321,3 +323,4 @@ if __name__ == '__main__':
         except Exception as e:
             print(f"Polling error: {e}. Restarting in 15 seconds...")
             time.sleep(15)
+"
