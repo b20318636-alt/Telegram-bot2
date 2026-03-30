@@ -136,34 +136,45 @@ def main_menu_keyboard():
 
 @bot.message_handler(commands=['start'])
 def command_start(message):
+    print(f"DEBUG: Command /start received from user {message.from_user.id}")
     handle_start(message)
 
 @bot.message_handler(func=lambda message: True)
 def handle_all_messages(message):
     text = message.text
+    print(f"DEBUG: Message received from user {message.from_user.id}: '{text}'")
     if not text:
         return
 
     # FUZZY MATCHING SYSTEM: Looks for keywords to avoid emoji mismatch issues
     if "Start" in text:
+        print("DEBUG: Matching 'Start'")
         handle_start(message)
     elif "Referral Link" in text:
+        print("DEBUG: Matching 'Referral Link'")
         handle_ref_link(message)
     elif "Stats" in text:
+        print("DEBUG: Matching 'Stats'")
         handle_stats(message)
     elif "Leaderboard" in text:
+        print("DEBUG: Matching 'Leaderboard'")
         handle_leaderboard(message)
     elif "Giveaways" in text:
+        print("DEBUG: Matching 'Giveaways'")
         handle_giveaways(message)
     elif "Hall of Fame" in text:
+        print("DEBUG: Matching 'Hall of Fame'")
         handle_hall_of_fame(message)
     elif "Contact" in text or "Profit" in text:
+        print("DEBUG: Matching 'Contact' or 'Profit'")
         handle_contact(message)
     elif "Cash Agent" in text or "Agent" in text:
+        print("DEBUG: Matching 'Cash Agent' or 'Agent'")
         handle_cash_agent(message)
     else:
         # Default response for unknown text
-        bot.send_message(message.chat.id, "Please use the menu buttons below:", reply_markup=main_menu_keyboard())
+        print(f"DEBUG: Unknown text received: '{text}'")
+        bot.send_message(message.chat.id, f"I received: '{text}'. Please use the menu buttons below:", reply_markup=main_menu_keyboard())
 
 def handle_start(message):
     user_id = message.from_user.id
@@ -317,6 +328,8 @@ def on_chat_member_update(update):
 if __name__ == '__main__':
     init_db()
     print("Bot started...")
+    # Clear any existing webhooks before starting polling
+    bot.remove_webhook()
     while True:
         try:
             bot.polling(none_stop=True, timeout=60, allowed_updates=["message", "callback_query", "chat_member"])
